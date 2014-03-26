@@ -54,6 +54,8 @@ LF.lfsocialhub = function(opts) {
 		});
 		
 		// Do Sharing
+		
+		var storage = Livefyre.require('streamhub-sdk/storage');
 
 		$("#socialHub").on("click", ".content-action-share", function(e) {
 			if (e.isTrigger) {
@@ -61,12 +63,35 @@ LF.lfsocialhub = function(opts) {
 			}
 			var id = $(e.target).data('content-id');
 			
-			var content = LF.meta[id],
-			description = $(".content-body[data-content-id='" + id + "']").text();
-			janrain.engage.share.setUrl(content.url);
-			janrain.engage.share.setImage(content.image);
-			janrain.engage.share.setDescription(description);
-			janrain.engage.share.setTitle(content.title);
+			var content = storage.get(id);
+			
+			switch (content.source) {
+			case 'feed': 
+				janrain.engage.share.setUrl(content.meta.content.feedEntry.link);
+				janrain.engage.share.setTitle(content.meta.content.title);
+				break;
+			case 'twitter':
+				janrain.engage.share.setUrl("https://twitter.com/statuses/" + content.tweetId);
+				break;
+			case 'facebook':
+				try {
+					janrain.engage.share.setUrl(content.meta.childContent[0].content.link);
+				} catch (e) {
+					janrain.engage.share.setUrl(null);
+				}
+				break;
+			case 'instagram':
+				console.log(content);
+				janrain.engage.share.setUrl(content.author.profileUrl);
+				janrain.engage.share.setImage(content.thumbnail_url);
+				janrain.engage.share.setTitle(content.meta.content.title);
+				break;
+			}
+			if (content.attachments.length > 0) {
+				janrain.engage.share.setImage(content.attachments[0].url);
+			}
+			
+			janrain.engage.share.setDescription(content.body);
 			janrain.engage.share.show();
 			
 			janrain.events.onModalClose.addHandler(function(response) {
