@@ -67,8 +67,6 @@ LF.lfsocialhub = function(opts) {
 				image,
 				title;
 			
-			console.log(content);
-			
 			description = content.body;
 			
 			switch (content.source) {
