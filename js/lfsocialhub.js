@@ -74,7 +74,7 @@ LF.lfsocialhub = function(opts) {
 			switch (content.source) {
 			case 'instagram': 
 				url = content.author.profileUrl;
-				image = content.attachments[0].thumbnail_url;
+				image = content.attachments[0].url;
 				break;
 			case 'twitter': 
 				url = 'https://twitter.com/statuses/' + content.tweetId + '/';
