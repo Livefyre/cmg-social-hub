@@ -55,16 +55,50 @@ LF.lfsocialhub = function(opts) {
 		
 		// Do Sharing
 
+		var storage = Livefyre.require('streamhub-sdk/storage');
+		
 		$("#socialHub").on("click", ".content-action-share", function(e) {
 			if (e.isTrigger) {
 				return;
 			}
-			var id = $(e.target).data('content-id');
+			var id = $(e.target).data('content-id'),
+				content = storage.get(id),
+				url,
+				image,
+				title;
 			
-			var content = LF.meta[id],
-			description = $(".content-body[data-content-id='" + id + "']").text();
-			janrain.engage.share.setUrl(content.url);
-			janrain.engage.share.setImage(content.image);
+			console.log(content);
+			
+			description = content.body;
+			
+			switch (content.source) {
+			case 'instagram': 
+				url = content.author.profileUrl;
+				image = content.attachments[0].thumbnail_url;
+				break;
+			case 'twitter': 
+				url = 'https://twitter.com/statuses/' + content.tweetId + '/';
+				break;
+			case 'feed':
+				url = content.meta.content.feedEntry.link;
+				title = content.meta.content.title;
+				break;
+			case 'facebook':
+				try {
+					url = content.attachments[0].link;
+				} catch (e) {
+					// no url on image
+				}
+			default:
+				break;	
+			}
+			try {
+				image = content.attachments[0].url;
+			} catch (e) {
+				// no image
+			}
+			janrain.engage.share.setUrl(url);
+			janrain.engage.share.setImage(image);
 			if (description != content.title) { // make sure no duplicatation of content
 				janrain.engage.share.setDescription(description);
 			}
