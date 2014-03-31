@@ -20,6 +20,33 @@
 	$releasenotes =<<<EOF
 /**
 	RELEASE NOTES:
+	Release v1.4 (Bacchus)
+
+	Tickets Addressed:
+	https://jira.cmgdigital.com/browse/JANUS-2165 (Clicking on twitter username opens another user's profile (Livefyre)
+	https://jira.cmgdigital.com/browse/JANUS-2359 (iPhone 5, iPad - Content takes longer time to load)
+	https://jira.cmgdigital.com/browse/JANUS-2166 (Missing IG Name upon media expansion across the screen)
+	https://jira.cmgdigital.com/browse/JANUS-2290 (Tweets with Facebook Link Display issue)
+	https://jira.cmgdigital.com/browse/JANUS-2212 (Images for share window)
+	https://jira.cmgdigital.com/browse/HELPDESK-42771 (Can't find content marked "featured")
+	
+	Ticket Resolutions:
+	JANUS-2165: SDK Update (2.6.10)
+	JANUS-2359: Reworked injection of sharing meta to use internal storage instead of page to avoid script errors; reworked the Load More button displays
+	JANUS-2166: SDK Update (2.6.10)
+	JANUS-2290: According to Facebook documentation:"
+	
+	Can I customize how the post is displayed on my web page?
+	
+	Currently, you cannot customize how Embedded Posts are displayed on your page. The size of the post is fixed to the same dimensions as it's shown on Facebook
+	
+	." 
+	
+	So unfortunately the only available resolution lies with Facebook themselves, but I've added a few tweaks to make it at least a bit better with keeping the URLs inside the card. On the whole, however, this is a Facebook limitation
+	
+	JANUS-2212: Added support for images shared for all card types
+	HELPDESK-42771: Same resolution as JANUS-2359 to avoid script errors.
+
 	
 	v1.3.0: JANUS-2165 opens leading for twitter, JANUS-2289 image sizing and color, 
 	v1.2.12: Resets .content p for spacing

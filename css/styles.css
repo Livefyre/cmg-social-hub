@@ -217,8 +217,18 @@
 }
 
 .content .content-body {
-	word-break: normal !important;
+	word-break: break-word;
 }
+
+.content .content-attachment iframe {
+	width: 100% !important;
+}
+
+.content .fb_iframe_widget span, .content .fb_iframe_widget iframe div {
+    width:100% !important;
+}
+
+.content .fb-post iframe[style] {width: 100% !important;}
 
 
 /** Sponsored content */
@@ -246,69 +256,83 @@
 	padding-left: 10px;
 	font-size: 14px;
 }
-/** iPad portrait & landscape */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px)  { 
-	#socialHub #socialheader a {
-		font: bold 16px/35px Arial, sans-serif;
-	}
+
+.sh-tablet #socialHub #socialheader a {
+	font: bold 16px/35px Arial, sans-serif;
+}
 	
-	#socialHub .content-body {
-		font: bold 13px/18px Arial, sans-serif;
-	}
-	
-	#socialHub #wall .content-container {
-		max-width: 33.3%;
-	}
-	
-	#socialHub .hub-list-more {
-		display:inherit !important;
-	}
+.sh-tablet #socialHub .content-body {
+	font: bold 13px/18px Arial, sans-serif;
 }
 
-/** iPhone 5 portrait & landscape */ 
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 568px) { 
-	#socialHub #socialheader a {
-		font: bold 8px/35px Arial, sans-serif;
-	}
+.sh-tablet #socialHub #wall .content-container {
+	max-width: 33.3%;
+}
 	
-	#socialHub .content-body {
-		font: bold 13px/18px Arial, sans-serif;
-	}
-	
-	#socialHub #wall .content-container {
-		min-width: 100%;
-	}
-	
-	#socialHub .hub-list-more {
-		display:inherit !important;
-	}
-	
-	#socialHub .feed {
-		display:none;
-	}
+.sh-tablet #socialHub .hub-list-more, #socialHub .hub-list-more:hover {
+	display:inherit;
+	background-color: white;
+	border-radius: 3px;
+	border: 1px solid rgba(0,0,0,0.15);
+	box-shadow: 0 1px 0 0 rgba(0,0,0,0.03);
+	color: #2c8ee0;
+	cursor: pointer;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1em;
+	margin: 0 auto;
+	padding: .75em;
+	text-align: center;
+	width: 10em;
+	-webkit-font-smoothing: antialiased;
+	-moz-transition: -moz-box-shadow .5s;
+	-webkit-transition: -webkit-box-shadow .5s;
+	-o-transition: -o-box-shadow .5s;
+	transition: box-shadow .5s;
+	background-image: none;
+	height: auto;
+	text-decoration: none;
 }
 
-/** iPhone 2G-4S in portrait & landscape */ 
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) { 
- 	/** no rules just for this */
+.sh-mobile #socialHub #socialheader a {
+	font: bold 8px/35px Arial, sans-serif;
+}
+	
+.sh-mobile #socialHub .content-body {
+	font: bold 13px/18px Arial, sans-serif;
 }
 
-/** Android S3 (at least) */
-@media screen 
-and (device-width: 320px) 
-and (device-height: 640px) and 
-(-webkit-device-pixel-ratio: 2) {
-	#socialHub .hub-list-more {
-		display:inherit !important;
-	}
+.sh-mobile #socialHub #wall .content-container {
+	min-width: 100%;
+}
 	
-	#socialHub .feed {
-		display:none;
-	}
-}	
+.sh-mobile #socialHub .hub-list-more, #socialHub .hub-list-more:hover {
+	display:inherit;
+	background-color: white;
+	border-radius: 3px;
+	border: 1px solid rgba(0,0,0,0.15);
+	box-shadow: 0 1px 0 0 rgba(0,0,0,0.03);
+	color: #2c8ee0;
+	cursor: pointer;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1em;
+	margin: 0 auto;
+	padding: .75em;
+	text-align: center;
+	width: 10em;
+	-webkit-font-smoothing: antialiased;
+	-moz-transition: -moz-box-shadow .5s;
+	-webkit-transition: -webkit-box-shadow .5s;
+	-o-transition: -o-box-shadow .5s;
+	transition: box-shadow .5s;
+	background-image: none;
+	text-decoration: none;
+	height: auto;
+}
+
+.sh-mobile #socialHub .feed {
+	display:none;
+}
