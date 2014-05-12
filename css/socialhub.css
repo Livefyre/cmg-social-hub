@@ -1,7 +1,7 @@
 <?php
     header("Content-type: text/css");
 	
-	$version = '1.4.0';
+	$version = '1.4.1';
 	$build_date = date('c');
 	
 	$files = array(
@@ -20,6 +20,9 @@
 	$releasenotes =<<<EOF
 /**
 	RELEASE NOTES:
+	
+	Release v1.4.1 bump version
+	
 	Release v1.4 (Bacchus)
 
 	Tickets Addressed:
