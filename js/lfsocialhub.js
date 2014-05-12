@@ -69,6 +69,7 @@ LF.lfsocialhub = function(opts) {
 			
 			description = content.body;
 			
+			
 			switch (content.source) {
 			case 'instagram': 
 				url = content.author.profileUrl;
@@ -80,6 +81,7 @@ LF.lfsocialhub = function(opts) {
 			case 'feed':
 				url = content.meta.content.feedEntry.link;
 				title = content.meta.content.title;
+				description = $("<span>" + description + "</span>").text(); // remove images within the body and only use images from the feed
 				break;
 			case 'facebook':
 				try {
@@ -95,6 +97,7 @@ LF.lfsocialhub = function(opts) {
 			} catch (e) {
 				// no image
 			}
+			console.log();
 			janrain.engage.share.setUrl(url);
 			janrain.engage.share.setImage(image);
 			if (description != content.title) { // make sure no duplicatation of content
