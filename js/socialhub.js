@@ -1,7 +1,7 @@
 <?php
     header("Content-type: text/javascript");
 	
-	$version = '1.4.0';
+	$version = '1.4.1';
 	$build_date = date('c');
 
 	$files = array(
@@ -21,6 +21,11 @@
 	$releasenotes = <<<EOF
 /**	
 	RELEASE NOTES
+	
+	Release v1.4.1 (Bacchus bugfixes)
+	https://jira.cmgdigital.com/browse/JANUS-2290 (Tweets with Facebook Link Display issue) ---failed (sometimes the url of the attachment is not the thumbnail)
+	https://jira.cmgdigital.com/browse/JANUS-2212 (Images for share window) ---failed (stripping out images in the RSS body now)
+	
 	Release v1.4 (Bacchus)
 
 	Tickets Addressed:

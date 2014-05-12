@@ -69,6 +69,11 @@ LF.lfsocialhub = function(opts) {
 			
 			description = content.body;
 			
+			try {
+				image = content.attachments[0].url;
+			} catch (e) {
+				// no image
+			}
 			
 			switch (content.source) {
 			case 'instagram': 
@@ -77,6 +82,11 @@ LF.lfsocialhub = function(opts) {
 				break;
 			case 'twitter': 
 				url = 'https://twitter.com/statuses/' + content.tweetId + '/';
+				try {
+					image = content.attachments[0].thumbnail_url; // sometimes it's not .url if it's a Facebook post that's been tweeted
+				} catch (e) {
+					// no image
+				};
 				break;
 			case 'feed':
 				url = content.meta.content.feedEntry.link;
@@ -92,12 +102,7 @@ LF.lfsocialhub = function(opts) {
 			default:
 				break;	
 			}
-			try {
-				image = content.attachments[0].url;
-			} catch (e) {
-				// no image
-			}
-			console.log();
+			
 			janrain.engage.share.setUrl(url);
 			janrain.engage.share.setImage(image);
 			if (description != content.title) { // make sure no duplicatation of content
