@@ -4,24 +4,7 @@ LF.meta = {};
 (function() {
 
 	var $ = Livefyre.require('streamhub-sdk/jquery');
-   
-/**
- * lfsocialhub
- * Sets up a three-column social hub experience
- * @author Sonyl Nagale <sonyl@livefyre.com>
- * @version 0.15
- * @param {Object} opts = {
- * 		el: String (required)
- * 		collections: Array (required) [ name (String): {
-					'network': String,
-					'siteId': String,
-					'articleId':String
-				}
-		]
- * }
- * @returns {LF.lfsocialhub} this instance
- */	
-	
+
 LF.lfsocialhub = function(opts) {
 	var defaults = {
 		'infiniteScroll':false
@@ -55,75 +38,6 @@ LF.lfsocialhub = function(opts) {
 		
 		// Do Sharing
 
-		var storage = Livefyre.require('streamhub-sdk/storage');
-		
-		$("#socialHub").on("click", ".content-action-share", function(e) {
-			if (e.isTrigger) {
-				return;
-			}
-			var id = $(e.target).data('content-id'),
-				content = storage.get(id),
-				url,
-				image,
-				title;
-			
-			description = content.body;
-			
-			try {
-				image = content.attachments[0].url;
-			} catch (e) {
-				// no image
-			}
-			
-			switch (content.source) {
-			case 'instagram': 
-				url = content.author.profileUrl;
-				image = content.attachments[0].url;
-				break;
-			case 'twitter': 
-				url = 'https://twitter.com/statuses/' + content.tweetId + '/';
-				try {
-					image = content.attachments[0].thumbnail_url; // sometimes it's not .url if it's a Facebook post that's been tweeted
-				} catch (e) {
-					// no image
-				};
-				break;
-			case 'feed':
-				url = content.meta.content.feedEntry.link;
-				title = content.meta.content.title;
-				description = $("<span>" + description + "</span>").text(); // remove images within the body and only use images from the feed
-				break;
-			case 'facebook':
-				try {
-					url = content.attachments[0].link;
-				} catch (e) {
-					// no url on image
-				}
-			default:
-				break;	
-			}
-			
-			janrain.engage.share.setUrl(url);
-			janrain.engage.share.setImage(image);
-			if (description != content.title) { // make sure no duplicatation of content
-				janrain.engage.share.setDescription(description);
-			}
-			janrain.engage.share.setTitle(content.title);
-			janrain.engage.share.show();
-			
-			janrain.events.onModalClose.addHandler(function(response) {
-				janrain.engage.share.reset();
-				
-				// since reset doesn't appear to work...
-				janrain.engage.share.setUrl(null);
-				janrain.engage.share.setImage(null);
-				janrain.engage.share.setDescription(null);
-				janrain.engage.share.setTitle(null);
-			});
-			e.preventDefault();
-			e.stopPropagation();
-
-		});
 
 		this.$header = $('#socialheader');
 
@@ -241,54 +155,136 @@ LF.lfsocialhub = function(opts) {
  */
 LF.lfsocialhub.prototype._prepData = function() {
 	
-	var ContentListView = Livefyre.require('streamhub-sdk/content/views/content-list-view');
-	var Collection = Livefyre.require('streamhub-sdk/collection');
-	var inherits = Livefyre.require('inherits');
-
-	for (var i = 0; i < this.opts.collections.length; ++i) {
-		var collection = this.opts.collections[i];
-		this.links.push(collection.name); // for the headers
+	Livefyre.require(
+			['streamhub-sdk/content/views/content-list-view',
+			 'streamhub-sdk/collection',
+			 'inherits',
+			 'streamhub-wall',
+			 'streamhub-sdk/ui/hub-button'],
+		$.proxy(function(ContentListView, Collection, inherits, WallView, HubButton) {
 		
-		this.collections[collection.name + "Collection"] = new Collection({
-			network: collection.network,
-			siteId: collection.siteId,
-			articleId: collection.articleId,
-			replies: true 
-		});
+			for (var i = 0; i < this.opts.collections.length; ++i) {
+				var collection = this.opts.collections[i];
+				this.links.push(collection.name); // for the headers
 				
-		this.views[collection.name + "View"] = new ContentListView({
-			initial: (this.isHandheld) ? 5 : 15,
-			showMore: (this.isHandheld) ? 5 : 15,
-			el: $('#' + collection.name + "Feed")
-		});					
-
-		this.viewopts = {
-				'views': {
-					'feed' : true,
-					'instagram':true,
-					'twitter':true,
-					'facebook':true
-				},
-				'sponsor': {
-					'author': collection.sponsorHandle,
-					'hashtag': collection.sponsorHashtag
+				this.collections[collection.name + "Collection"] = new Collection({
+					network: collection.network,
+					siteId: collection.siteId,
+					articleId: collection.articleId,
+					replies: true 
+				});
+			
+				var sharer = function(content) {
+					description = content.body;
+					
+					try {
+						image = content.attachments[0].url;
+					} catch (e) {
+						// no image
+					}
+					
+					switch (content.source) {
+					case 'instagram': 
+						url = content.author.profileUrl;
+						image = content.attachments[0].url;
+						break;
+					case 'twitter': 
+						url = 'https://twitter.com/statuses/' + content.tweetId + '/';
+						try {
+							image = content.attachments[0].thumbnail_url; // sometimes it's not .url if it's a Facebook post that's been tweeted
+						} catch (e) {
+							// no image
+						};
+						break;
+					case 'feed':
+						url = content.meta.content.feedEntry.link;
+						title = content.meta.content.title;
+						description = $("<span>" + description + "</span>").text(); // remove images within the body and only use images from the feed
+						break;
+					case 'facebook':
+						try {
+							url = content.attachments[0].link;
+						} catch (e) {
+							// no url on image
+						}
+					default:
+						break;	
+					}
+					
+					janrain.engage.share.setUrl(url);
+					if (typeof image != 'undefined') {
+						janrain.engage.share.setImage(image);
+					}
+					if (description != content.title) { // make sure no duplicatation of content
+						janrain.engage.share.setDescription(description);
+					}
+					janrain.engage.share.setTitle(content.title);
+					janrain.engage.share.show();
+					
+					janrain.events.onModalClose.addHandler(function(response) {
+						janrain.engage.share.reset();
+						
+						// since reset doesn't appear to work...
+						janrain.engage.share.setUrl(null);
+						janrain.engage.share.setImage(null);
+						janrain.engage.share.setDescription(null);
+						janrain.engage.share.setTitle(null);
+					});
+				};
+				
+				var liker = function() {
+					return null;
 				}
-		};
+				
+				this.views[collection.name + "View"] = new ContentListView({
+					initial: (this.isHandheld) ? 5 : 15,
+					showMore: (this.isHandheld) ? 5 : 15,
+					el: $('#' + collection.name + "Feed"),
+					sharer: sharer
+				});					
 		
-		this.collections[collection.name + "Collection"].viewopts = this.viewopts;
-		
-		this.customContent = new LF.lfcustomcontent(this.viewopts);
+				var ogCreateContentView = this.views[collection.name + "View"].createContentView;
+				this.views[collection.name + "View"].createContentView = function () {
+	                var contentView = ogCreateContentView.apply(this, arguments);
+//	                var button = new HubButton(function () {
+//	                    console.log(this);
+//	                }, {
+//	                    label: ''
+//	                });
+//	                button.elClass += ' content-action-share';
+//	                contentView.addButton(button);
+	                return contentView;
+	            };
 
-		inherits(this.customContent,ContentListView);
-		
-
-		this.customContent.hasCustomContentView.call(this.views[collection.name + "View"], this.viewopts);
-                
-		this.collections[collection.name + "Collection"].pipe(this.views[collection.name + "View"]);
-	}
-	
-	this._setEvents();
-
+//
+//	            
+//				this.viewopts = {
+//						'views': {
+//							'feed' : true,
+//							'instagram':true,
+//							'twitter':true,
+//							'facebook':true
+//						},
+//						'sponsor': {
+//							'author': collection.sponsorHandle,
+//							'hashtag': collection.sponsorHashtag
+//						}
+//				};
+//				
+//				this.collections[collection.name + "Collection"].viewopts = this.viewopts;
+//				
+//				this.customContent = new LF.lfcustomcontent(this.viewopts);
+//		
+//				inherits(this.customContent,ContentListView);
+//				
+//		
+//				this.customContent.hasCustomContentView.call(this.views[collection.name + "View"], this.viewopts);
+//		                
+				this.collections[collection.name + "Collection"].pipe(this.views[collection.name + "View"]);
+			}
+			
+			this._setEvents();
+	},this));
 };
 
 /**
@@ -380,17 +376,24 @@ LF.lfsocialhub.prototype.clickEventIndividual = function(e) {
 LF.lfsocialhub.prototype._setWall = function() {
 	this.$el.fadeOut($.proxy(function() {
 		this.$el.fadeIn();
-
-		// prep our wall view
-		var WallView = Livefyre.require('streamhub-wall');
 		
-		this.wallView = new WallView({
-		    el: this.$el
-		});
-				
-		this.desiredCollection.pipe(this.wallView);
+		Livefyre.require(
+				['streamhub-sdk/collection',
+				 'streamhub-wall',
+				 'streamhub-sdk/ui/hub-button'],
+			$.proxy(function(Collection, WallView, HubButton) {
+					// prep our wall view
+					
+				console.log(this.desiredCollection);
+					this.wallView = new WallView({
+					    el: this.$el
+					});
+							
+					this.desiredCollection.pipe(this.wallView);
+		}));
 		
-		this.customContent.hasCustomContentView.call(this.wallView, this.desiredCollection.viewopts);
+		
+		//this.customContent.hasCustomContentView.call(this.wallView, this.desiredCollection.viewopts);
 
 	},this));
 };
