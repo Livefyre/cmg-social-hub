@@ -1,7 +1,7 @@
 <?php
     header("Content-type: text/css");
 	
-	$version = '1.4.1';
+	$version = '1.4.2';
 	$build_date = date('c');
 	
 	$files = array(
