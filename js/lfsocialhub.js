@@ -69,7 +69,6 @@ LF.lfsocialhub = function(opts) {
 			
 			description = content.body;
 			
-			console.log(content);
 			switch (content.source) {
 			case 'instagram': 
 				url = content.author.profileUrl;
