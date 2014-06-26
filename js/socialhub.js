@@ -22,6 +22,9 @@
 /**	
 	RELEASE NOTES
 	
+	Release v1.4.2 (Bacchus bugfixes 2) 
+	https://jira.cmgdigital.com/browse/JANUS-2866 (FB image is broken in the share window) (Now using thumbnail_url if it's facebook since they changed something)
+	
 	Release v1.4.1 (Bacchus bugfixes)
 	https://jira.cmgdigital.com/browse/JANUS-2290 (Tweets with Facebook Link Display issue) ---failed (sometimes the url of the attachment is not the thumbnail)
 	https://jira.cmgdigital.com/browse/JANUS-2212 (Images for share window) ---failed (stripping out images in the RSS body now)
