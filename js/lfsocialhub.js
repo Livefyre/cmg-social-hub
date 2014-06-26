@@ -69,6 +69,7 @@ LF.lfsocialhub = function(opts) {
 			
 			description = content.body;
 			
+			console.log(content);
 			switch (content.source) {
 			case 'instagram': 
 				url = content.author.profileUrl;
@@ -91,7 +92,11 @@ LF.lfsocialhub = function(opts) {
 				break;	
 			}
 			try {
-				image = content.attachments[0].url;
+				if (content.source == "facebook") {
+					image = content.attachments[0].thumbnail_url;
+				} else {
+					image = content.attachments[0].url;
+				}
 			} catch (e) {
 				// no image
 			}
