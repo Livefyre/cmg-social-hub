@@ -185,6 +185,11 @@
 .content p {
 	margin:0 !important;
 }
+
+#socialHub article div.content-body {
+	word-wrap: normal;
+	word-break: normal;
+}
 /** sharing intents */
 
 #socialHub .content-action-share {

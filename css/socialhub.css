@@ -1,7 +1,7 @@
 <?php
     header("Content-type: text/css");
 	
-	$version = '1.4.2';
+	$version = '1.4.3';
 	$build_date = date('c');
 	
 	$files = array(
@@ -20,6 +20,8 @@
 	$releasenotes =<<<EOF
 /**
 	RELEASE NOTES:
+	
+	Release v1.4.3 Fix word breaks
 	
 	Release v1.4.1 bump version
 	

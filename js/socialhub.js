@@ -1,7 +1,7 @@
 <?php
     header("Content-type: text/javascript");
 	
-	$version = '1.4.2';
+	$version = '1.4.3';
 	$build_date = date('c');
 
 	$files = array(
@@ -21,6 +21,8 @@
 	$releasenotes = <<<EOF
 /**	
 	RELEASE NOTES
+	
+	Release v1.4.3 Version Bump
 	
 	Release v1.4.2 (Bacchus bugfixes 2) 
 	https://jira.cmgdigital.com/browse/JANUS-2866 (FB image is broken in the share window) (Now using thumbnail_url if it's facebook since they changed something)
